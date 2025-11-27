@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:app/data/firebase_service/firebase_auth.dart';
+import 'package:app/util/dialog.dart';
+import 'package:app/util/exception.dart';
+import 'package:app/util/imagepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -20,6 +26,8 @@ class _SignupScreenState extends State<SignupScreen> {
   FocusNode password_F = FocusNode();
   final confirmPasswordController = TextEditingController();
   FocusNode confirmPassword_F = FocusNode();
+
+  File? _imageFile;
   @override
   void initState() {
     super.initState();
@@ -52,10 +60,33 @@ class _SignupScreenState extends State<SignupScreen> {
             Center(child: Image.asset("images/logo.jpg")),
             SizedBox(height: 60.h),
             Center(
-              child: CircleAvatar(
-                radius: 34.r,
-                backgroundColor: Colors.grey.shade200,
-                backgroundImage: AssetImage('images/person.png'),
+              child: InkWell(
+                onTap: () async {
+                  File _imageFilee = await ImagePickerr().uploadImage(
+                    "gallery",
+                  );
+                  setState(() {
+                    _imageFile = _imageFilee;
+                  });
+                },
+                child: CircleAvatar(
+                  radius: 36.r,
+                  backgroundColor: Colors.grey,
+                  child: _imageFile == null
+                      ? CircleAvatar(
+                          radius: 34.r,
+                          backgroundColor: Colors.grey.shade200,
+                          backgroundImage: AssetImage('images/person.png'),
+                        )
+                      : CircleAvatar(
+                          radius: 34.r,
+                          backgroundImage: Image.file(
+                            _imageFile!,
+                            fit: BoxFit.cover,
+                          ).image,
+                          backgroundColor: Colors.grey.shade200,
+                        ),
+                ),
               ),
             ),
             SizedBox(height: 50.h),
@@ -79,7 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
               Icons.lock,
             ),
             SizedBox(height: 20.h),
-            Login(),
+            Signup(),
             SizedBox(height: 10.h),
             Have(),
           ],
@@ -114,23 +145,39 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget Login() {
+  Widget Signup() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Text(
-          "Đăng ký",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 23.sp,
-            fontWeight: FontWeight.bold,
+      child: InkWell(
+        onTap: () async {
+          try {
+            await Authentication().Signup(
+              email: emailController.text,
+              password: passwordController.text,
+              passwordConfirm: confirmPasswordController.text,
+              bio: bioController.text,
+              userName: userNameController.text,
+              profile: File(''),
+            );
+          } on exceptions catch (e) {
+            dialogBuilder(context, e.message);
+          }
+        },
+        child: Container(
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: 44.h,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Text(
+            "Đăng ký",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 23.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
