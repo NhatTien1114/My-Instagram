@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
         backgroundColor: const Color(0xffFAFAFA),
       ),
+
       body: CustomScrollView(
         slivers: [
           SliverList(

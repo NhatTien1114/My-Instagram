@@ -8,6 +8,7 @@ class PostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // phần header gồm tên địa chỉ
         Container(
           width: 375.w,
           height: 54.h,
@@ -27,11 +28,13 @@ class PostWidget extends StatelessWidget {
             ),
           ),
         ),
+        // Chứa hình ảnh
         Container(
           height: 375.h,
           width: 375.w,
           child: Image.asset("images/post.jpg", fit: BoxFit.cover),
         ),
+        // Phần like, comment và share
         Container(
           width: 375.w,
           color: Colors.white,

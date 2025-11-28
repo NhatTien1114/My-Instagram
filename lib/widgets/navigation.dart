@@ -1,3 +1,4 @@
+import 'package:app/screen/add_screen.dart';
 import 'package:app/screen/explor_screen.dart';
 import 'package:app/screen/home.dart';
 import 'package:app/screen/profile_screen.dart';
@@ -65,7 +66,8 @@ class _Navigations_ScreenState extends State<Navigations_Screen> {
         children: [
           HomeScreen(),
           ExploreScreen(),
-          ReelsScreen(),
+          AddScreen(),
+          // ReelsScreen(),
           ProfileScreen(),
         ],
       ),
