@@ -53,67 +53,71 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            SizedBox(width: 96.w, height: 100.h),
-            Center(child: Image.asset("images/logo.jpg")),
-            SizedBox(height: 60.h),
-            Center(
-              child: InkWell(
-                onTap: () async {
-                  File _imageFilee = await ImagePickerr().uploadImage(
-                    "gallery",
-                  );
-                  setState(() {
-                    _imageFile = _imageFilee;
-                  });
-                },
-                child: CircleAvatar(
-                  radius: 36.r,
-                  backgroundColor: Colors.grey,
-                  child: _imageFile == null
-                      ? CircleAvatar(
-                          radius: 34.r,
-                          backgroundColor: Colors.grey.shade200,
-                          backgroundImage: AssetImage('images/person.png'),
-                        )
-                      : CircleAvatar(
-                          radius: 34.r,
-                          backgroundImage: Image.file(
-                            _imageFile!,
-                            fit: BoxFit.cover,
-                          ).image,
-                          backgroundColor: Colors.grey.shade200,
-                        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(width: 96.w, height: 100.h),
+              Center(child: Image.asset("images/logo.png")),
+              SizedBox(height: 60.h),
+              Center(
+                child: InkWell(
+                  onTap: () async {
+                    File? _imageFilee = await ImagePickerr().uploadImage(
+                      "gallery",
+                    );
+                    if (_imageFilee != null) {
+                      setState(() {
+                        _imageFile = _imageFilee;
+                      });
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 36.r,
+                    backgroundColor: Colors.grey,
+                    child: _imageFile == null
+                        ? CircleAvatar(
+                            radius: 34.r,
+                            backgroundColor: Colors.grey.shade200,
+                            backgroundImage: AssetImage('images/person.png'),
+                          )
+                        : CircleAvatar(
+                            radius: 34.r,
+                            backgroundImage: Image.file(
+                              _imageFile!,
+                              fit: BoxFit.cover,
+                            ).image,
+                            backgroundColor: Colors.grey.shade200,
+                          ),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 50.h),
-            textField(emailController, email_F, "Email", Icons.email),
-            SizedBox(height: 15.h),
-            textField(
-              userNameController,
-              userName_F,
-              "Tên đăng nhập",
-              Icons.person,
-            ),
-            SizedBox(height: 15.h),
-            textField(bioController, bio_F, "Tiểu sử", Icons.abc),
-            SizedBox(height: 15.h),
-            textField(passwordController, password_F, "Mật khẩu", Icons.lock),
-            SizedBox(height: 15.h),
-            textField(
-              confirmPasswordController,
-              confirmPassword_F,
-              "Xác nhận mật khẩu",
-              Icons.lock,
-            ),
-            SizedBox(height: 20.h),
-            Signup(),
-            SizedBox(height: 10.h),
-            Have(),
-          ],
+              SizedBox(height: 50.h),
+              textField(emailController, email_F, "Email", Icons.email),
+              SizedBox(height: 15.h),
+              textField(
+                userNameController,
+                userName_F,
+                "Tên đăng nhập",
+                Icons.person,
+              ),
+              SizedBox(height: 15.h),
+              textField(bioController, bio_F, "Tiểu sử", Icons.abc),
+              SizedBox(height: 15.h),
+              textField(passwordController, password_F, "Mật khẩu", Icons.lock),
+              SizedBox(height: 15.h),
+              textField(
+                confirmPasswordController,
+                confirmPassword_F,
+                "Xác nhận mật khẩu",
+                Icons.lock,
+              ),
+              SizedBox(height: 20.h),
+              Signup(),
+              SizedBox(height: 10.h),
+              Have(),
+            ],
+          ),
         ),
       ),
     );
@@ -150,6 +154,10 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: InkWell(
         onTap: () async {
+          if (_imageFile == null) {
+            dialogBuilder(context, "Vui lòng chọn ảnh đại diện.");
+            return;
+          }
           try {
             await Authentication().Signup(
               email: emailController.text,
@@ -157,7 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
               passwordConfirm: confirmPasswordController.text,
               bio: bioController.text,
               userName: userNameController.text,
-              profile: File(''),
+              profile: _imageFile!,
             );
           } on exceptions catch (e) {
             dialogBuilder(context, e.message);
