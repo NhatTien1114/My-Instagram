@@ -1,8 +1,8 @@
+import 'package:app/widgets/comment.dart';
 import 'package:app/util/image_cached.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:date_format/date_format.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class PostWidget extends StatelessWidget {
   final snapshot;
@@ -49,7 +49,28 @@ class PostWidget extends StatelessWidget {
                   SizedBox(width: 14.w),
                   Icon(Icons.favorite_border_outlined, size: 25.w),
                   SizedBox(width: 17.w),
-                  Image.asset("images/comment.webp", height: 28.h),
+                  GestureDetector(
+                    onTap: () {
+                      showBottomSheet(
+                        backgroundColor: Colors.transparent,
+                          context: context,
+                          builder:(context) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                              child: DraggableScrollableSheet(
+                                maxChildSize: 0.6,
+                                initialChildSize: 0.6,
+                                minChildSize: 0.2,
+                                builder: (context, scrollController) {
+                                return Comment("posts",snapshot['postId']);
+                              },
+                              ),
+                            );
+                          },
+                      );
+                    },
+                      child: Image.asset("images/comment.webp", height: 28.h),
+                  ),
                   SizedBox(width: 17.w),
                   Image.asset('images/send.jpg', height: 28.h),
                   const Spacer(),
@@ -96,6 +117,5 @@ class PostWidget extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }
