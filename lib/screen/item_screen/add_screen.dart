@@ -1,5 +1,5 @@
-import 'package:app/screen/add_post_screen.dart';
-import 'package:app/screen/add_reels_screen.dart';
+import 'package:app/screen/item_screen/add_post_screen.dart';
+import 'package:app/screen/item_screen/add_reels_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

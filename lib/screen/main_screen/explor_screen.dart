@@ -1,4 +1,4 @@
-import 'package:app/screen/post_screen.dart';
+import 'package:app/screen/main_screen/post_screen.dart';
 import 'package:app/util/image_cached.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

@@ -105,4 +105,29 @@ class Firebase_Firestor {
     });
     return true;
   }
+
+  Future<String> like({
+    required List like,
+    required String type,
+    required String uid,
+    required String postId,
+    required
+}) async {
+    String res = "some error";
+    try {
+      if (like.contains(uid)) {
+        await _firebaseFirestore.collection(type).doc(postId).update({
+          'like': FieldValue.arrayRemove([uid]),
+        } );
+      } else {
+        await _firebaseFirestore.collection(type).doc(postId).update({
+        'like': FieldValue.arrayUnion([uid]),
+        } );
+      }
+      res = "success";
+    } on Exception catch(e) {
+      res = e.toString();
+    }
+    return res;
+  }
 }

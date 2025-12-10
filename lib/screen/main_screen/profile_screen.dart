@@ -1,6 +1,6 @@
 import 'package:app/data/firebase_service/firestor.dart';
 import 'package:app/data/model/usermodel.dart';
-import 'package:app/screen/post_screen.dart';
+import 'package:app/screen/main_screen/post_screen.dart';
 import 'package:app/util/image_cached.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

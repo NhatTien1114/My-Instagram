@@ -1,8 +1,8 @@
-import 'package:app/screen/add_screen.dart';
-import 'package:app/screen/explor_screen.dart';
-import 'package:app/screen/home.dart';
-import 'package:app/screen/profile_screen.dart';
-import 'package:app/screen/reels_screen.dart';
+import 'package:app/screen/item_screen/add_screen.dart';
+import 'package:app/screen/main_screen/explor_screen.dart';
+import 'package:app/screen/main_screen/home.dart';
+import 'package:app/screen/main_screen/profile_screen.dart';
+import 'package:app/screen/main_screen/reels_screen.dart';
 import 'package:flutter/material.dart';
 
 class Navigations_Screen extends StatefulWidget {

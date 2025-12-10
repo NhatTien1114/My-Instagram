@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'package:app/screen/item_screen/add_post_text.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
-import 'package:app/screen/add_post_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:photo_manager/photo_manager.dart';
