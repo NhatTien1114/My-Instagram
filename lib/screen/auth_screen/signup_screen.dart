@@ -167,6 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
               userName: userNameController.text,
               profile: _imageFile!,
             );
+            widget.show();
           } on exceptions catch (e) {
             dialogBuilder(context, e.message);
           }

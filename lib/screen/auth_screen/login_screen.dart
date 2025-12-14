@@ -1,4 +1,6 @@
 import 'package:app/data/firebase_service/firebase_auth.dart';
+import 'package:app/util/dialog.dart';
+import 'package:app/util/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -84,10 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: InkWell(
         onTap: () async {
-          await Authentication().Login(
-            email: emailController.text,
-            password: passwordController.text,
-          );
+          try {
+            await Authentication().Login(
+              email: emailController.text,
+              password: passwordController.text,
+            );
+          } on exceptions catch (e) {
+            dialogBuilder(context, e.message);
+          }
         },
         child: Container(
           alignment: Alignment.center,

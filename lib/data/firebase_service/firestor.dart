@@ -28,11 +28,11 @@ class Firebase_Firestor {
     return true;
   }
 
-  Future<Usermodel> getUser() async {
+  Future<Usermodel> getUser({String? uidd}) async {
     try {
       final user = await _firebaseFirestore
           .collection("users")
-          .doc(_auth.currentUser!.uid)
+          .doc(uidd ?? _auth.currentUser!.uid)
           .get();
       final snapuser = user.data()!;
       return Usermodel(
@@ -73,7 +73,7 @@ class Firebase_Firestor {
   Future<bool> CreateReels({
     required String video,
     required String caption,
-}) async {
+  }) async {
     var uid = Uuid().v4();
     DateTime data = new DateTime.now();
     Usermodel user = await getUser();
@@ -94,15 +94,20 @@ class Firebase_Firestor {
     required String comment,
     required String type,
     required String uidd,
-}) async {
+  }) async {
     var uid = Uuid().v4();
     Usermodel user = await getUser();
-    await _firebaseFirestore.collection(type).doc(uidd).collection("comments").doc(uid).set({
-      'comment': comment,
-      'userName': user.userName,
-      'profileImage': user.profile,
-      'CommentUid': uid,
-    });
+    await _firebaseFirestore
+        .collection(type)
+        .doc(uidd)
+        .collection("comments")
+        .doc(uid)
+        .set({
+          'comment': comment,
+          'userName': user.userName,
+          'profileImage': user.profile,
+          'CommentUid': uid,
+        });
     return true;
   }
 
@@ -111,23 +116,57 @@ class Firebase_Firestor {
     required String type,
     required String uid,
     required String postId,
-    required
-}) async {
+
+    required,
+  }) async {
     String res = "some error";
     try {
       if (like.contains(uid)) {
         await _firebaseFirestore.collection(type).doc(postId).update({
           'like': FieldValue.arrayRemove([uid]),
-        } );
+        });
       } else {
         await _firebaseFirestore.collection(type).doc(postId).update({
-        'like': FieldValue.arrayUnion([uid]),
-        } );
+          'like': FieldValue.arrayUnion([uid]),
+        });
       }
       res = "success";
-    } on Exception catch(e) {
+    } on Exception catch (e) {
       res = e.toString();
     }
     return res;
+  }
+
+  Future<void> follow({required String uid}) async {
+    DocumentSnapshot snap = await _firebaseFirestore
+        .collection('users')
+        .doc(_auth.currentUser!.uid)
+        .get();
+    List following = (snap.data()! as dynamic)['following'];
+    try {
+      if (following.contains(uid)) {
+        _firebaseFirestore
+            .collection('users')
+            .doc(_auth.currentUser!.uid)
+            .update({
+              'following': FieldValue.arrayRemove([uid]),
+            });
+        await _firebaseFirestore.collection('users').doc(uid).update({
+          'follower': FieldValue.arrayRemove([_auth.currentUser!.uid]),
+        });
+      } else {
+        _firebaseFirestore
+            .collection('users')
+            .doc(_auth.currentUser!.uid)
+            .update({
+              'following': FieldValue.arrayUnion([uid]),
+            });
+        _firebaseFirestore.collection('users').doc(uid).update({
+          'follower': FieldValue.arrayUnion([_auth.currentUser!.uid]),
+        });
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 }

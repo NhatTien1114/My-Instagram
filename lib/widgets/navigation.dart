@@ -3,6 +3,7 @@ import 'package:app/screen/main_screen/explor_screen.dart';
 import 'package:app/screen/main_screen/home.dart';
 import 'package:app/screen/main_screen/profile_screen.dart';
 import 'package:app/screen/main_screen/reels_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Navigations_Screen extends StatefulWidget {
@@ -16,6 +17,8 @@ int _currentIndex = 0;
 
 class _Navigations_ScreenState extends State<Navigations_Screen> {
   late PageController pageController;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   @override
   void initState() {
@@ -69,7 +72,7 @@ class _Navigations_ScreenState extends State<Navigations_Screen> {
           ExploreScreen(),
           AddScreen(),
           ReelsScreen(),
-          ProfileScreen(),
+          ProfileScreen(Uid: _auth.currentUser!.uid,),
         ],
       ),
     );
