@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback show;
+
   const LoginScreen(this.show, {super.key});
 
   @override
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode email_F = FocusNode();
   final passwordController = TextEditingController();
   FocusNode password_F = FocusNode();
+  bool isShow = false;
 
   @override
   void initState() {
@@ -35,24 +37,68 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
             SizedBox(width: 96.w, height: 100.h),
-            Center(child: Image.asset("images/logo.png")),
-            SizedBox(height: 120.h),
-            textField(emailController, email_F, "Email", Icons.email),
-            SizedBox(height: 15.h),
-            textField(passwordController, password_F, "Mật khẩu", Icons.lock),
-            SizedBox(height: 10.h),
-            Forgot(),
-            SizedBox(height: 10.h),
-            Login(),
-            SizedBox(height: 10.h),
-            Have(),
-          ],
+        Center(child: Image.asset("images/logo.png")),
+        SizedBox(height: 120.h),
+        textField(emailController, email_F, "Email", Icons.email),
+        SizedBox(height: 15.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: Container(
+            height: 44.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.r),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: TextField(
+                style: TextStyle(fontSize: 18.sp, color: Colors.black),
+                controller: passwordController,
+                focusNode: password_F,
+                obscureText: !isShow,
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: password_F.hasFocus ? Colors.black : Colors.grey,
+                  ),
+                  suffixIcon: IconButton(
+                      onPressed: (){
+                        setState(() {
+                          isShow = !isShow;
+                        });
+                      },
+                      icon: isShow ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 15.h,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.r),
+                    borderSide: BorderSide(color: Colors.grey, width: 2.w),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.r),
+                    borderSide: BorderSide(color: Colors.black, width: 2.w),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
+        SizedBox(height: 10.h),
+        Forgot(),
+        SizedBox(height: 10.h),
+        Login(),
+        SizedBox(height: 10.h),
+        Have(),
+        ],
       ),
-    );
+    ),);
   }
 
   Widget Have() {
@@ -130,12 +176,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget textField(
-    TextEditingController controller,
-    FocusNode focus,
-    String type,
-    IconData icon,
-  ) {
+  Widget textField(TextEditingController controller,
+      FocusNode focus,
+      String type,
+      IconData icon,) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Container(

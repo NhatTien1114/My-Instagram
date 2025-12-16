@@ -26,6 +26,8 @@ class _SignupScreenState extends State<SignupScreen> {
   FocusNode password_F = FocusNode();
   final confirmPasswordController = TextEditingController();
   FocusNode confirmPassword_F = FocusNode();
+  bool isShowPass = false;
+  bool isShowConfirm = false;
 
   File? _imageFile;
   @override
@@ -104,13 +106,98 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 15.h),
               textField(bioController, bio_F, "Tiểu sử", Icons.abc),
               SizedBox(height: 15.h),
-              textField(passwordController, password_F, "Mật khẩu", Icons.lock),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: Container(
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: TextField(
+                      style: TextStyle(fontSize: 18.sp, color: Colors.black),
+                      controller: passwordController,
+                      focusNode: password_F,
+                      obscureText: !isShowPass,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: password_F.hasFocus ? Colors.black : Colors.grey,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: (){
+                            setState(() {
+                              isShowPass = !isShowPass;
+                            });
+                          },
+                          icon: isShowPass ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 15.w,
+                          vertical: 15.h,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.r),
+                          borderSide: BorderSide(color: Colors.grey, width: 2.w),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.r),
+                          borderSide: BorderSide(color: Colors.black, width: 2.w),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(height: 15.h),
-              textField(
-                confirmPasswordController,
-                confirmPassword_F,
-                "Xác nhận mật khẩu",
-                Icons.lock,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: Container(
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5.r),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w),
+                    child: TextField(
+                      style: TextStyle(fontSize: 18.sp, color: Colors.black),
+                      controller: confirmPasswordController,
+                      focusNode: confirmPassword_F,
+                      obscureText: !isShowConfirm,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: confirmPassword_F.hasFocus ? Colors.black : Colors.grey,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: (){
+                            setState(() {
+                              isShowConfirm = !isShowConfirm;
+                            });
+                          },
+                          icon: isShowConfirm ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 15.w,
+                          vertical: 15.h,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.r),
+                          borderSide: BorderSide(color: Colors.grey, width: 2.w),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.r),
+                          borderSide: BorderSide(color: Colors.black, width: 2.w),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20.h),
               Signup(),
@@ -167,6 +254,7 @@ class _SignupScreenState extends State<SignupScreen> {
               userName: userNameController.text,
               profile: _imageFile!,
             );
+            await Authentication().signOut();
             widget.show();
           } on exceptions catch (e) {
             dialogBuilder(context, e.message);
