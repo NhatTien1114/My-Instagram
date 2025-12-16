@@ -3,14 +3,15 @@ import 'package:app/data/firebase_service/firestor.dart';
 import 'package:app/data/model/usermodel.dart';
 import 'package:app/screen/main_screen/post_screen.dart';
 import 'package:app/util/image_cached.dart';
+import 'package:app/widgets/reel_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ProfileScreen extends StatefulWidget {
-  String Uid;
-  ProfileScreen({super.key, required this.Uid});
+  final String Uid;
+  const ProfileScreen({super.key, required this.Uid});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -26,7 +27,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getdata();
     if (_auth.currentUser!.uid == widget.Uid) {
@@ -88,72 +88,153 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.black),
-            onSelected: (value) {
-              if (value == 'logout') {
-                _showLogoutConfirmationDialog();
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem<String>(
-                  value: 'logout',
-                  child: Text('Đăng xuất'),
-                ),
-              ];
-            },
-          ),
+          leading: yours
+              ? PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, color: Colors.black),
+                  onSelected: (value) {
+                    if (value == 'logout') {
+                      _showLogoutConfirmationDialog();
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Text('Đăng xuất'),
+                      ),
+                    ];
+                  },
+                )
+              : null,
         ),
         backgroundColor: Colors.grey.shade100,
         body: SafeArea(
-            child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: FutureBuilder(
-                future: Firebase_Firestor().getUser(uidd: widget.Uid),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return Head(snapshot.data!);
-                },
-              ),
-            ),
-            StreamBuilder(
-              stream: _firebaseFirestore
-                  .collection("posts")
-                  .where('uuid', isEqualTo: widget.Uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return SliverToBoxAdapter(
-                      child: const Center(child: CircularProgressIndicator()));
-                }
-                post_length = snapshot.data!.docs.length;
-                return SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final snap = snapshot.data!.docs[index];
-                        return GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      PostScreen(snap.data())));
-                            },
-                            child: CachedImage(snap['postImage']));
-                      },
-                      childCount: post_length,
+          child: Builder(builder: (context) {
+            return AnimatedBuilder(
+              animation: DefaultTabController.of(context),
+              builder: (context, child) {
+                final tabIndex = DefaultTabController.of(context).index;
+                return CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: FutureBuilder(
+                        future: Firebase_Firestor().getUser(uidd: widget.Uid),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          return Head(snapshot.data!);
+                        },
+                      ),
                     ),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4));
+                    if (tabIndex == 0)
+                      StreamBuilder(
+                        stream: _firebaseFirestore
+                            .collection("posts")
+                            .where('uuid', isEqualTo: widget.Uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const SliverToBoxAdapter(
+                                child: Center(
+                                    child: CircularProgressIndicator()));
+                          }
+                          post_length = snapshot.data!.docs.length;
+                          return SliverGrid(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final snap = snapshot.data!.docs[index];
+                                  return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostScreen(snap.data())));
+                                      },
+                                      child: CachedImage(snap['postImage']));
+                                },
+                                childCount: post_length,
+                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 4));
+                        },
+                      ),
+                    if (tabIndex == 1)
+                      StreamBuilder(
+                        stream: _firebaseFirestore
+                            .collection("reels")
+                            .where('uuid', isEqualTo: widget.Uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const SliverToBoxAdapter(
+                                child: Center(
+                                    child: CircularProgressIndicator()));
+                          }
+                          return SliverGrid(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return PageView.builder(
+                                            controller: PageController(
+                                                initialPage: index),
+                                            scrollDirection: Axis.vertical,
+                                            itemCount:
+                                                snapshot.data!.docs.length,
+                                            itemBuilder:
+                                                (context, pageIndex) {
+                                              final reelSnap = snapshot
+                                                  .data!.docs[pageIndex];
+                                              return ReelItem(
+                                                  reelSnap.data());
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    color: Colors.grey.shade300,
+                                    child: Icon(
+                                      Icons.video_collection,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                );
+                              },
+                              childCount: snapshot.data!.docs.length,
+                            ),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 4,
+                                    mainAxisSpacing: 4),
+                          );
+                        },
+                      ),
+                    if (tabIndex == 2)
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.all(40.0),
+                          child: Center(
+                            child: Text('Nội dung được gắn thẻ chưa có sẵn.'),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
               },
-            ),
-          ],
-        )),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -250,11 +331,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: yours ? Colors.grey.shade400 : Colors.blue),
                   ),
                   child: yours
-                      ? Text('Chỉnh sửa trang cá nhân')
-                      : Text(
-                    'Theo dõi',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                      ? const Text('Chỉnh sửa trang cá nhân')
+                      : const Text(
+                          'Theo dõi',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ),
@@ -283,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(5.r),
                             border: Border.all(color: Colors.grey.shade200),
                           ),
-                          child: Text('Bỏ theo dõi')),
+                          child: const Text('Bỏ theo dõi')),
                     ),
                   ),
                   SizedBox(width: 8.w),
@@ -297,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(5.r),
                         border: Border.all(color: Colors.grey.shade200),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Nhắn tin',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -310,10 +391,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(
             height: 10.h,
           ),
-          SizedBox(
-            height: 30.h,
+          const SizedBox(
+            height: 30,
             width: double.infinity,
-            child: const TabBar(
+            child: TabBar(
               tabs: [
                 Icon(Icons.grid_on),
                 Icon(Icons.video_collection),

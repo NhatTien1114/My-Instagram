@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';class CachedImage extends StatelessWidget {
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+class CachedImage extends StatelessWidget {
   String? imageURL;
+
   CachedImage(this.imageURL, {super.key});
 
   @override
@@ -21,9 +24,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';class CachedImage ex
           ),
         );
       },
-      errorWidget: (context, url, error) => Container(
-        color: Colors.amber,
-      )
+      errorWidget: (context, url, error) => Container(color: Colors.amber),
     );
   }
 }
