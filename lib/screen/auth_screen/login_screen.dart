@@ -138,7 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
               password: passwordController.text,
             );
           } on exceptions catch (e) {
-            dialogBuilder(context, e.message);
+            dialogBuilder(context, "Lỗi khi đăng nhập");
+            exceptions(e.message.toString());
           }
         },
         child: Container(

@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Authentication {
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Logic login
   Future<void> Login({required String email, required String password}) async {
     try {
       await _auth.signInWithEmailAndPassword(
@@ -18,6 +20,7 @@ class Authentication {
     }
   }
 
+  // Logic singnup
   Future<void> Signup({
     required String email,
     required String password,
@@ -48,7 +51,7 @@ class Authentication {
             URL = "";
           }
 
-          // Lấy thông tin với firestor
+          // Tạo tài khoản
           await Firebase_Firestor().createUser(
             email: email,
             userName: userName,
@@ -66,6 +69,7 @@ class Authentication {
     }
   }
 
+  // Logic logout
   Future<void> signOut() async {
     await _auth.signOut();
   }
