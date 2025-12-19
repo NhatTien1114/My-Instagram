@@ -51,18 +51,53 @@ assets/                   # Demo images
 | Firebase Storage        | Store uploaded images               |
 
 ## 🔐 Login & Signup Screen
-![Login Screen](assets/login.png)
-![Login Screen](assets/signup.png)
+
+<p align="center">
+  <img src="assets/login.png" width="250"/>
+  <img src="assets/signup.png" width="250"/>
+</p>
+
+---
+
 ## 📰 Feed Screen
-![Feed Screen](assets/post.png)
-![Feed Screen](assets/post_2.png)
+
+<p align="center">
+  <img src="assets/post.png" width="250"/>
+  <img src="assets/post_2.png" width="250"/>
+</p>
+
+---
+
 ## 🔍 Explore Screen
-![Explore Screen](assets/explore.png)
+
+<p align="center">
+  <img src="assets/explore.png" width="300"/>
+</p>
+
+---
+
 ## 🎞️ Reels Screen
-![Reels Screen](assets/reels.png)
+
+<p align="center">
+  <img src="assets/reels.png" width="250"/>
+</p>
+
+---
+
 ## ➕ Add Post Screen
-![Add Post Screen](assets/add_post.png)
+
+<p align="center">
+  <img src="assets/add_post.png" width="250"/>
+</p>
+
+---
+
 ## 👤 Profile Screen
-![Profile Screen](assets/profile.png)
+
+<p align="center">
+  <img src="assets/profile.png" width="250"/>
+</p>
+
+
 
 
