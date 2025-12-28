@@ -97,12 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 50.h),
               textField(emailController, email_F, "Email", Icons.email),
               SizedBox(height: 15.h),
-              textField(
-                userNameController,
-                userName_F,
-                "Tên đăng nhập",
-                Icons.person,
-              ),
+              textField(userNameController, userName_F, "Tên đăng nhập", Icons.person,),
               SizedBox(height: 15.h),
               textField(bioController, bio_F, "Tiểu sử", Icons.abc),
               SizedBox(height: 15.h),

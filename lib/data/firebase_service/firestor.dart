@@ -51,7 +51,7 @@ class Firebase_Firestor {
   Future<bool> CreatePost({
     required String postImage,
     required String caption,
-    required location,
+    required String location,
   }) async {
     var uid = Uuid().v4();
     DateTime data = new DateTime.now();
@@ -111,13 +111,37 @@ class Firebase_Firestor {
     return true;
   }
 
+  Future<bool> CreateStory({
+    required String mediaUrl,
+    required String type,
+    required String caption,
+  }) async {
+    try {
+      var uid = Uuid().v4();
+      DateTime data = new DateTime.now();
+      Usermodel user = await getUser();
+      await _firebaseFirestore.collection("stories").doc(uid).set({
+        'mediaUrl': mediaUrl,
+        'type': type,
+        'caption': caption,
+        'userName': user.userName,
+        'profileImage': user.profile,
+        'uuid': _auth.currentUser!.uid,
+        'storyId': uid,
+        'time': data,
+      });
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   Future<String> like({
     required List like,
     required String type,
     required String uid,
     required String postId,
-
-    required,
   }) async {
     String res = "some error";
     try {
